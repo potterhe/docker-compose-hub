@@ -1,0 +1,14 @@
+[[servers]]
+host = "openldap"
+port = 1389
+use_ssl = false
+start_tls = false
+ssl_skip_verify = false
+bind_dn = "cn=admin,dc=example,dc=org"
+bind_password = "adminpassword"
+search_filter = "(cn=%s)"
+search_base_dns = ["ou=users,dc=example,dc=org"]
+
+[servers.attributes]
+member_of = "memberOf"
+email =  "email"
