@@ -37,14 +37,29 @@ services:
 #     - './phpldapadmin-env.yaml:/container/environment/01-custom/env.yaml'
 #     - './phpldapadmin_data/sessions:/var/www/html/storage/framework/sessions'
 #     - './phpldapadmin_data/logs:/var/www/html/storage/logs'
+  mysql:
+    image: mysql:8.1.0
+    ports:
+      - '13306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_DATABASE=keycloak
+    volumes:
+      - './mysql_data:/var/lib/mysql'
   keycloak:
-    image: keycloak/keycloak:22.0.1
+    image: keycloak/keycloak:22.0.3
     command: 'start-dev'
     ports:
       - '8180:8080'
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=mysql
+      - KC_DB_USERNAME=root
+      - KC_DB_PASSWORD=example
+      - KC_DB_URL=jdbc:mysql://mysql/keycloak
+    depends_on:
+      - mysql
   grafana:
     image: grafana/grafana:10.1.1
     ports:
