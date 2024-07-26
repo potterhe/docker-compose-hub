@@ -2,9 +2,23 @@ _format_version: "3.0"
 _transform: true
 
 services:
-- name: example_service
+- name: httpbin
   url: http://httpbin.org
   routes:
   - name: my-route
     paths:
     - /
+- name: 3scale-echo-api
+  url: http://echo-api.3scale.net
+  routes:
+  - name: my-route2
+    paths:
+    - /
+
+plugins:
+- name: prometheus
+  config:
+    latency_metrics: true
+    status_code_metrics: true
+    bandwidth_metrics: true
+    upstream_health_metrics: true
