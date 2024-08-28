@@ -15,10 +15,20 @@ services:
       - KONG_PROXY_ERROR_LOG=/dev/stderr
       - KONG_ADMIN_ERROR_LOG=/dev/stderr
       - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_PLUGINS=bundled,my-plugin
+      - KONG_TRACING_INSTRUMENTATIONS=all
+      - KONG_TRACING_SAMPLING_RATE=1.0
      #- KONG_ADMIN_GUI_URL="http://localhost:8002"
     volumes:
       - './kong/kong.yml:/kong/declarative/kong.yml'
+      - './my-plugin/kong/plugins/my-plugin:/usr/local/share/lua/5.1/kong/plugins/my-plugin'
      #- '/Users/heqiang/projects/potterhe/apisix-plugin-demo:/usr/local/apisix-plugin-demo'
+  jaeger:
+    image: jaegertracing/all-in-one:1.60
+    ports:
+      - '16686:16686'
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
 # httpbin:
 #   image: openresty/openresty:1.25.3.1-5-bullseye-fat
 #   volumes:

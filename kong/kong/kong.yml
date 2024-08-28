@@ -8,13 +8,29 @@ services:
   - name: my-route
     paths:
     - /
+  - name: my-route3
+    paths:
+    - /ip
+    strip_path: false
+  plugins:
+  - name: basic-auth
+   #hosts:
+   #- xlocal2.xjjj.co
 - name: 3scale-echo-api
   url: http://echo-api.3scale.net
   routes:
   - name: my-route2
     paths:
-    - /
+    - /xxx
+    plugins:
+    - name: jwt
 
+##
+#upstreams:
+#- name: http://httpbin.org
+
+
+##
 plugins:
 - name: prometheus
   config:
@@ -22,3 +38,31 @@ plugins:
     status_code_metrics: true
     bandwidth_metrics: true
     upstream_health_metrics: true
+- name: opentelemetry
+  config:
+    endpoint: http://jaeger:4318/v1/traces
+- name: my-plugin
+#- name: rate-limiting
+#  config:
+#    minute: 5
+#    policy: local
+
+consumers:
+- custom_id: SOME_CUSTOM_ID
+  username: USER123
+  tags:
+    - silver-tier
+- custom_id: CUSTOM_ID_2
+  username: USER2
+
+basicauth_credentials:
+- consumer: USER123
+  username: Aladdin
+  password: OpenSesame
+
+jwt_secrets:
+- consumer: USER2
+  algorithm: HS256
+  secret: n415M6OrVnR4Dr1gyErpta0wSKQ2cMzK
+  # key 要和 iss保持一致
+  key: YJdmaDvVTJxtcWRCvkMikc8oELgAVNcz
